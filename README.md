@@ -78,8 +78,6 @@ $ python cli/qgjob.py submit --org-id=qualgent --app-version-id=xyz123 --test=te
 
 $ python cli/qgjob.py status --job-id 1234abcd... --watch
 ✅ running updated version...
-1234abcd... → queued
-1234abcd... → running
 1234abcd... → completed
 ```
 
