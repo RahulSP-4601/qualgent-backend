@@ -1,9 +1,9 @@
-name: AppWright Test
+name: QualGent Python Job
 
 on: [push]
 
 jobs:
-  run-tests:
+  backend-job:  # <-- renamed from run-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -11,7 +11,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: 3.12  # ✅ Keep this
 
       - name: Install dependencies
         run: pip install -r requirements.txt
