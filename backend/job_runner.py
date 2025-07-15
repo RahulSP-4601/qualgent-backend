@@ -8,12 +8,17 @@ async def run_jobs():
             if not queue.empty():
                 job_id = await queue.get()
 
-                # Optional delay to keep it in 'queued' state for a bit
-                await asyncio.sleep(1)
+                # Simulate delay before picking up the job (keeps it in "queued")
+                await asyncio.sleep(10)
 
                 jobs[job_id]["status"] = "running"
-                await asyncio.sleep(2)  # simulate execution
+                print(f"Job {job_id} → running")
+
+                # Simulate execution time
+                await asyncio.sleep(10)
+
                 jobs[job_id]["status"] = "completed"
+                print(f"Job {job_id} → completed")
 
         await asyncio.sleep(1)
 
