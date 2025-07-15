@@ -1,0 +1,21 @@
+name: AppWright Test
+
+on: [push]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Submit test job
+        run: |
+          python cli/qgjob.py submit --org-id=qualgent --app-version-id=xyz123 --test=tests/onboarding.spec.js
