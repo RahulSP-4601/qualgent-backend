@@ -18,3 +18,6 @@ jobs:
 
       - name: Skip CLI job submission (FastAPI not running in CI)
         run: echo "✅ Skipping job submission because FastAPI server is not running in GitHub Actions"
+
+      - name: Skip job submission (server not running)
+        run: echo "⚠️ Skipping CLI job submission because FastAPI server is not running in CI."
