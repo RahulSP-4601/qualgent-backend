@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 import os
-from backend.state import queues  
+from backend.state import queues
 from backend.state import jobs, video_results
 from backend.models import VideoResult
 from backend.browserstack_executor import run_browserstack_test, get_browserstack_video_url
@@ -33,7 +33,7 @@ async def run_jobs():
                     jobs[job_id]["status"] = "completed"
                     print(f"✅ Job {job_id} → completed")
 
-                    video_url = get_browserstack_video_url(session_id)
+                    video_url = get_browserstack_video_url(session_id, jobs[job_id]["target"])
                     if not video_url:
                         video_url = f"https://browserstack.com/mock-video/{job_id}"
 
