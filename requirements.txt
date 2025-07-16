@@ -2,3 +2,7 @@ fastapi
 uvicorn
 typer[all]
 requests
+appium-python-client
+requests
+python-dotenv
+

@@ -5,19 +5,44 @@ on: [push]
 jobs:
   backend-job:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.12
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install typer requests
 
-      - name: Skip CLI job submission (FastAPI not running in CI)
-        run: echo "✅ Skipping job submission because FastAPI server is not running in GitHub Actions"
+      - name: Submit Test Job via CLI
+        id: submit
+        run: |
+          JOB_RESPONSE=$(python cli/qgjob.py submit \
+            --org-id=qualgent \
+            --app-version-id=xyz123 \
+            --test=tests/onboarding.spec.js \
+            --target=browserstack)
+          echo "$JOB_RESPONSE"
+          echo "$JOB_RESPONSE" | grep -oP '"job_id":\s*"\K[^"]+' > job_id.txt
+          echo "job_id=$(cat job_id.txt)" >> $GITHUB_OUTPUT
 
-      - name: Skip job submission (server not running)
-        run: echo "⚠️ Skipping CLI job submission because FastAPI server is not running in CI."
+      - name: Watch Test Status
+        run: |
+          echo "Watching status for job: ${{ steps.submit.outputs.job_id }}"
+          python cli/qgjob.py status --job-id=${{ steps.submit.outputs.job_id }} --watch
+
+      - name: Check Job Result
+        run: |
+          STATUS=$(curl -s http://localhost:8000/status/${{ steps.submit.outputs.job_id }} | jq -r .status)
+          echo "Job Status: $STATUS"
+          if [ "$STATUS" != "completed" ]; then
+            echo "❌ Job failed or incomplete"
+            exit 1
+          fi
