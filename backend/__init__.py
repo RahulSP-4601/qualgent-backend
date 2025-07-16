@@ -5,11 +5,11 @@ class JobRequest(BaseModel):
     org_id: str
     app_version_id: str
     test_path: str
-    priority: int = 1
-    target: str  # emulator, device, browserstack
+    priority: int
+    target: str
 
 class VideoResult(BaseModel):
     job_id: str
+    platform: str
     video_url: str
-    platform: str  # android, ios, etc.
     timestamp: datetime

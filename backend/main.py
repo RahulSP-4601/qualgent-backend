@@ -2,15 +2,18 @@ from fastapi import FastAPI
 import uuid
 import asyncio
 
-from backend.models import JobRequest
+from backend.models.job_model import JobRequest
 from backend.job_runner import start_runner
 from backend.state import queues, jobs, video_results
+from backend.db.session import engine
+from backend.models.video_result_model import Base  # ✅ this is where your models inherit from
 
 app = FastAPI()
 
 @app.on_event("startup")
 def on_startup():
     print("✅ FastAPI startup hook triggered.")
+    Base.metadata.create_all(bind=engine)  # ✅ Create video_results table
     asyncio.create_task(start_runner())
 
 @app.post("/submit")
